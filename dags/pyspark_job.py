@@ -16,7 +16,7 @@ with DAG('pyspark_job', default_args=default_args, schedule_interval=None) as da
         namespace='airflow',
         image='kabileshe/newspark:3.5.1',
         cmds=[
-            '/spark/bin/spark-submit',
+            '/opt/spark/bin/spark-submit',
             '--master=k8s://https://172.19.33.11:6443',
             '--deploy-mode', 'cluster',
             '--name', 'script',

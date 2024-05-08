@@ -21,19 +21,9 @@ with DAG('kubernetes_pod_example', default_args=default_args, schedule_interval=
         namespace='default',
         image="python:3.6",
         cmds=["python", "-c"],
-        arguments=["print('hello world')"],
+        arguments=["print('hello world. This is CSK Army')"],
         labels={"foo": "bar"},
         get_logs=True,
     )
 
-    failing = KubernetesPodOperator(
-        task_id="failing-task",
-        name="fail",
-        namespace='default',
-        image="busybox",
-        cmds=["ls", "/non-existent-directory"],
-        labels={"foo": "bar"},
-        get_logs=True,
-    )
-
-    passing >> failing
+passing 

@@ -1,47 +1,39 @@
-from airflow import DAG
 from datetime import datetime, timedelta
-from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
-from airflow.operators.dummy_operator import DummyOperator
-
+from airflow import DAG
+from airflow.providers.cncf.kubernetes.operators.kubernetes_pod import KubernetesPodOperator
+from airflow.utils.dates import days_ago
 
 default_args = {
     'owner': 'airflow',
     'depends_on_past': False,
-    'start_date': datetime.utcnow(),
-    'email': ['airflow@example.com'],
+    'start_date': days_ago(1),
     'email_on_failure': False,
     'email_on_retry': False,
     'retries': 1,
-    'retry_delay': timedelta(minutes=5)
+    'retry_delay': timedelta(minutes=5),
 }
 
-dag = DAG(
-    'kubernetes_sample', default_args=default_args, schedule_interval=timedelta(minutes=10))
+with DAG('kubernetes_pod_example', default_args=default_args, schedule_interval=None) as dag:
 
+    passing = KubernetesPodOperator(
+        task_id="passing-task",
+        name="passing-test",
+        namespace='default',
+        image="python:3.6",
+        cmds=["python", "-c"],
+        arguments=["print('hello world')"],
+        labels={"foo": "bar"},
+        get_logs=True,
+    )
 
-start = DummyOperator(task_id='run_this_first', dag=dag)
+    failing = KubernetesPodOperator(
+        task_id="failing-task",
+        name="fail",
+        namespace='default',
+        image="busybox",
+        cmds=["ls", "/non-existent-directory"],
+        labels={"foo": "bar"},
+        get_logs=True,
+    )
 
-passing = KubernetesPodOperator(namespace='default',
-                          image="Python:3.6",
-                          cmds=["Python","-c"],
-                          arguments=["print('hello world')"],
-                          labels={"foo": "bar"},
-                          name="passing-test",
-                          task_id="passing-task",
-                          get_logs=True,
-                          dag=dag
-                          )
-
-failing = KubernetesPodOperator(namespace='default',
-                          image="ubuntu:1604",
-                          cmds=["Python","-c"],
-                          arguments=["print('hello world')"],
-                          labels={"foo": "bar"},
-                          name="fail",
-                          task_id="failing-task",
-                          get_logs=True,
-                          dag=dag
-                          )
-
-passing.set_upstream(start)
-failing.set_upstream(start)
+    passing >> failing

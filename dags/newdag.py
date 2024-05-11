@@ -21,7 +21,6 @@ with DAG('spark_job', default_args=default_args, schedule_interval=None) as dag:
     --deploy-mode cluster \
     --name script \
     --conf spark.kubernetes.container.image=kabileshe/newspark:3.5.1 \
-    --conf spark.kubernetes.authenticate.driver.serviceAccountName=spark \
     local:///opt/spark/examples/jars/script1.py
     """
 

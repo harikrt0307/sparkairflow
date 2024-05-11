@@ -14,7 +14,7 @@ with DAG('pyspark_job', default_args=default_args, schedule_interval=None) as da
         task_id='pyspark_task',
         name='pyspark_job',
         namespace='airflow',
-        image='docker.io/kabileshe/newspark:3.5.1',
+        image='docker.io/kabileshe/newspark:3.5.1',  # Specify the driver container image here
         cmds=[
             '/opt/spark/bin/spark-submit',
             '--master=k8s://https://172.19.33.11:6443',

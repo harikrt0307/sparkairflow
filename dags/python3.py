@@ -16,7 +16,7 @@ default_args = {
 with DAG('script3', default_args=default_args, schedule_interval=None) as dag:
 
     spark_submit_command = """
-    /bin/spark-submit \
+    /opt/spark/bin/spark-submit \
     --master=k8s://https://172.19.33.11:6443 \
     --deploy-mode cluster \
     --name script1 \

@@ -16,12 +16,12 @@ default_args = {
 with DAG('script3', default_args=default_args, schedule_interval=None) as dag:
 
     spark_submit_command = """
-    /opt/spark/bin/spark-submit \
+    /bin/spark-submit \
     --master=k8s://https://172.19.33.11:6443 \
     --deploy-mode cluster \
-    --name script3 \
+    --name script1 \
     --conf spark.kubernetes.container.image=kabileshe/newspark:3.5.1 \
-    local:///opt/spark/examples/jars/script3.py
+    local:///opt/spark/examples/jars/script1.py
     """
 
     run_spark_job = KubernetesPodOperator(

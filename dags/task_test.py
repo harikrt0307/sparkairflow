@@ -54,4 +54,4 @@ with DAG('spark_job_task_test', default_args=default_args, schedule_interval=Non
         get_logs=True,
     )
 
-run_spark_job > run_spark_job1
+run_spark_job >> run_spark_job1

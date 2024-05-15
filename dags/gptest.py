@@ -19,7 +19,7 @@ with DAG('insert_into_greenplum', default_args=default_args, schedule_interval=N
         --master=k8s://https://172.19.33.11:6443 \
         --deploy-mode cluster \
         --name insert-into-greenplum \
-        --conf spark.kubernetes.container.image=kabileshe/gptest:1.1 \
+        --conf spark.kubernetes.container.image=kabileshe/gptest:1.2 \
         local:///opt/spark/gpscript.py
     """
 
@@ -27,7 +27,7 @@ with DAG('insert_into_greenplum', default_args=default_args, schedule_interval=N
         task_id='run_spark_job',
         name='insert-into-greenplum',
         namespace='airflow',
-        image='kabileshe/gptest:1.1',
+        image='kabileshe/gptest:1.2',
         cmds=["bash", "-c"],
         arguments=[spark_submit_command],
         labels={"app": "spark"},

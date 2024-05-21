@@ -16,10 +16,14 @@ with DAG('run_pyspark_scripts', schedule_interval=None, default_args=default_arg
         env_vars={
             'SPARK_MASTER': 'k8s://https://172.19.33.11:6443',
         },
-        cmds=["/bin/bash", "-c", "python {{ ti.xcom_pull(task_ids='get_script1')[0] }}"],
-        get_files={
-            'https://raw.githubusercontent.com/harikrt0307/sparkairflow/main/dags/testscript2.py': '/tmp/script2.py'
-        }
+        cmds=["/bin/bash", "-c", "python /tmp/script2.py"],
+        init_containers=[
+            {
+                'name': 'download-scripts',
+                'image': 'curlimages/curl',
+                'command': ['sh', '-c', 'curl https://raw.githubusercontent.com/harikrt0307/sparkairflow/main/dags/testscript2.py -o /tmp/script2.py']
+            }
+        ]
     )
 
     script2 = KubernetesPodOperator(
@@ -30,10 +34,14 @@ with DAG('run_pyspark_scripts', schedule_interval=None, default_args=default_arg
         env_vars={
             'SPARK_MASTER': 'k8s://https://172.19.33.11:6443',
         },
-        cmds=["/bin/bash", "-c", "python {{ ti.xcom_pull(task_ids='get_script2')[0] }}"],
-        get_files={
-            'https://raw.githubusercontent.com/harikrt0307/sparkairflow/main/dags/testscript.py': '/tmp/script1.py'
-        }
+        cmds=["/bin/bash", "-c", "python /tmp/script1.py"],
+        init_containers=[
+            {
+                'name': 'download-scripts',
+                'image': 'curlimages/curl',
+                'command': ['sh', '-c', 'curl https://raw.githubusercontent.com/harikrt0307/sparkairflow/main/dags/testscript.py -o /tmp/script1.py']
+            }
+        ]
     )
 
     script1 >> script2

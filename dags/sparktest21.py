@@ -13,24 +13,9 @@ with DAG('run_pyspark_scripts', schedule_interval=None, default_args=default_arg
         task_id='run_script1',
         name='spark-script1',
         namespace='spark-operator',
-        image='apache/spark:3.5.1',  # Ensure the correct tag for Spark version
-        env_vars={
-            'SPARK_MASTER': 'k8s://https://172.19.33.11:6443',
-        },
-        cmds=["python"],
-        arguments=["https://raw.githubusercontent.com/harikrt0307/sparkairflow/main/dags/testscript2.py"],
+        image='apache/spark:3.5.1',
+        cmds=["/opt/spark/bin/spark-submit"],
+        arguments=["--master", "k8s://https://172.19.33.11:6443", "--deploy-mode", "cluster", "https://raw.githubusercontent.com/harikrt0307/sparkairflow/main/dags/testscript2.py"],
     )
 
-    script2 = KubernetesPodOperator(
-        task_id='run_script2',
-        name='spark-script2',
-        namespace='spark-operator',
-        image='apache/spark:3.5.1',  # Ensure the correct tag for Spark version
-        env_vars={
-            'SPARK_MASTER': 'k8s://https://172.19.33.11:6443',
-        },
-        cmds=["python"],
-        arguments=["https://raw.githubusercontent.com/harikrt0307/sparkairflow/main/dags/testscript.py"],
-    )
-
-    script1 >> script2
+    script1

@@ -1,6 +1,4 @@
 from pyspark.sql import SparkSession
-import requests
-from io import StringIO
 
 # Create a SparkSession
 spark = SparkSession.builder.appName("InsertIntoGreenPlum").getOrCreate()
@@ -12,16 +10,9 @@ greenplum_database = "gpadmin"
 greenplum_user = "gpadmin"
 greenplum_password = "gpadmin"
 
-# Download the CSV file from the GitHub URL
+# Read the CSV file from the GitHub URL
 excel_file_url = "https://github.com/harikrt0307/sparkairflow/raw/main/dags/data1.csv"
-response = requests.get(excel_file_url)
-csv_data = response.text
-
-# Create an RDD from the CSV data
-csv_rdd = spark.sparkContext.parallelize([csv_data])
-
-# Convert the RDD to a DataFrame
-df = spark.read.csv(csv_rdd.wholeTextFiles().map(lambda x: x[1]), header=True, inferSchema=True)
+df = spark.read.option("header", "true").option("inferSchema", "true").csv(excel_file_url)
 
 # Write the DataFrame to the GreenPlum table
 jdbc_url = f"jdbc:postgresql://{greenplum_host}:{greenplum_port}/{greenplum_database}"

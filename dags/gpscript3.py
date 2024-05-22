@@ -12,10 +12,7 @@ greenplum_password = "gpadmin"
 
 # Read data from CSV into a DataFrame
 excel_file_path = "https://github.com/harikrt0307/sparkairflow/raw/main/dags/data1.csv"
-df = spark.read.format("csv") \
-    .option("header", "true") \
-    .option("inferSchema", "true") \
-    .load(excel_file_path)
+df = spark.read.csv(excel_file_path, header=True, inferSchema=True)
 
 # Write the DataFrame to the GreenPlum table
 jdbc_url = f"jdbc:postgresql://{greenplum_host}:{greenplum_port}/{greenplum_database}"

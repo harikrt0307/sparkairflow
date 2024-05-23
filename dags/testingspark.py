@@ -25,7 +25,17 @@ submit_spark_job = KubernetesPodOperator(
     name='spark-job',
     image='docker.io/kabileshe/redtagspark:3.5.1',
     cmds=["/bin/bash", "-c"],
-    arguments=["spark-submit --master k8s://https://172.19.33.11:6443 --deploy-mode cluster --name spark-job --conf spark.executor.instances=2 --conf spark.kubernetes.container.image=docker.io/kabileshe/redtagspark:3.5.1 https://raw.githubusercontent.com/harikrt0307/sparkairflow/main/dags/gpscript.py"],
+    arguments=[
+        "echo 'Starting Spark job...'; "
+        "spark-submit "
+        "--master k8s://https://172.19.33.11:6443 "
+        "--deploy-mode cluster "
+        "--name spark-job "
+        "--conf spark.executor.instances=2 "
+        "--conf spark.kubernetes.container.image=docker.io/kabileshe/redtagspark:3.5.1 "
+        "https://raw.githubusercontent.com/harikrt0307/sparkairflow/main/dags/gpscript.py; "
+        "echo 'Spark job completed.'"
+    ],
     env_vars={
         'PYSPARK_PYTHON': '/usr/bin/python3',
     },

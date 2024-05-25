@@ -19,7 +19,7 @@ schema = StructType([
 ])
 
 # Path to the CSV file
-csv_file_path = "/mnt/data/data.csv"
+csv_file_path = "/mnt/config/data.csv"
 
 # Read the CSV file into a DataFrame
 df = spark.read.format("csv") \

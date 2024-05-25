@@ -33,5 +33,13 @@ df.show()
 # Print the schema
 df.printSchema()
 
+# Write the DataFrame to a text file
+output_path = "/mnt/data/output.txt"
+df.selectExpr("CAST(emp_id AS STRING)", "CAST(att_date AS STRING)", "CAST(actual_intime AS STRING)",
+              "CAST(actual_outtime AS STRING)", "CAST(regular_intime AS STRING)", "CAST(regular_outtime AS STRING)",
+              "CAST(location AS STRING)", "CAST(attendance AS STRING)") \
+  .rdd.map(lambda row: ",".join(row)) \
+  .saveAsTextFile(output_path)
+
 # Stop the SparkSession
 spark.stop()

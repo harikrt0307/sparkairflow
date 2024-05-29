@@ -13,7 +13,7 @@ default_args = {
 
 # Function to fetch the PySpark job script from GitHub
 def fetch_script():
-    url = "https://raw.githubusercontent.com/harikrt0307/apache_airflow/main/dags/gpscript.py"
+    url = "https://raw.githubusercontent.com/harikrt0307/sparkairflow/main/dags/gpdager.py"
     token = Variable.get("GITHUB_TOKEN")
     headers = {"Authorization": f"token {token}"}
     response = requests.get(url, headers=headers)
